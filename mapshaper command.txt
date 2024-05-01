@@ -1,0 +1,15 @@
+https://stackoverflow.com/questions/76056965/how-can-i-provide-a-variable-percentage-to-mapshaper-via-the-cli
+
+https://github.com/mbloch/mapshaper/blob/master/REFERENCE.md#-each
+
+mapshaper csd2021.shp -require simp_length.js alias=_ -simplify variable percentage='_.percentage(this)' weighted weighting=1 stats keep-shapes -proj wgs84 -o simplified.length.shp
+
+
+mapshaper conditional simplification:
+https://github.com/mbloch/mapshaper/issues/154
+
+To use this feature, add the variable flag to the -simplify command, and pass an expression as the value of resolution=, percentage= or interval= instead of a literal value. The expression could be the name of a data field that contains the simplification value for each feature, a ternary expression, or another expression of the kind used by the -each command. 
+
+Example
+
+-simplify variable resolution='this.area < 1e8 ? 20000 : 10000'
