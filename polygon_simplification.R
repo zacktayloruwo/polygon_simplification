@@ -20,6 +20,7 @@ load("~/Dropbox (Personal)/Observatory Dropbox/census/boundaries/observatory_pol
 
 # polygon simplification function ----
 # requires the creation of two subfolders: "_temp" and "_path"
+# requires a local instance of mapshaper
 
 polygon_simplify <- function(filename, x, y) {
   
