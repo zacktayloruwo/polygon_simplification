@@ -15,6 +15,9 @@ library(rmapshaper)
 
 load("~/Dropbox (Personal)/Observatory Dropbox/census/boundaries/observatory_polygons_20240401.RData")
 
+## access here:
+## https://www.dropbox.com/scl/fi/zffauot0qqespwp0gwshx/observatory_polygons_20240401.RData?rlkey=209kzl7k6nsz506zd3v36xlcl&dl=1
+
 # polygon simplification function ----
 # requires the creation of two subfolders: "_temp" and "_path"
 
@@ -104,13 +107,15 @@ polygon_dissolve <- function(from, to, field, start, end) {
   
 }
 
-# create a list to put the simplified polygons
+# simplify ----
+
+## create a list to put the simplified polygons
 polygons_simplified <- NULL
 
-# create a list to put the vertex counts to assess simplification
+## create a list to put the vertex counts to assess simplification
 vertices <- NULL
 
-# simplify all CSD polygons
+## simplify all CSD polygons
 
 for (t in c(1951, seq(1981, 2021, 5))) {
   
@@ -132,7 +137,7 @@ for (t in c(1951, seq(1981, 2021, 5))) {
   
 }
 
-# simplify all CT polygons
+## simplify all CT polygons
 
 for (t in seq(1951, 2021, 5)) {
   
@@ -154,10 +159,9 @@ for (t in seq(1951, 2021, 5)) {
   
 }
 
-save(polygons_simplified, file = "polygons_simplified.RData")
-save(vertices, file = "polygons_vertices.RData")
+# dissolve ----
 
-# dissolve CSD to CD 1951
+## dissolve CSD to CD 1951
 
 t = 1951
 fr = paste0("csd_", t)
@@ -171,7 +175,7 @@ vertices[[to]] <- list(orig = mapview::npts(layers_sf[[to]]),
                        simp = mapview::npts(polygons_simplified[[to]])
 )
 
-# dissolve CSD to CD 1981-2021
+## dissolve CSD to CD 1981-2021
 
 for (t in seq(1981, 2021, 5)) {
   
@@ -188,7 +192,7 @@ for (t in seq(1981, 2021, 5)) {
   
 }
 
-# dissolve CSD to PR
+## dissolve CSD to PR
 
 for (t in c(1951, seq(1981, 2021, 5))) {
   
@@ -205,7 +209,7 @@ for (t in c(1951, seq(1981, 2021, 5))) {
   
 }
 
-# dissolve CT to CMA
+## dissolve CT to CMA
 
 for (t in seq(1951, 2021, 5)) {
   
@@ -221,31 +225,14 @@ for (t in seq(1951, 2021, 5)) {
   )
 }
 
-# running the code to simplify the 2021 CSD layer and dissolve it to CD and PR
 
-# csd_2021_simplified <- polygon_simplify(filename = "csd_2021", x = 0.6, y = 0.98)
-# cd_2021_simplified <- polygon_dissolve(from = "csd_2021_simplified", to = "cd_2021", field = "geosid", start = 1, end = 4)
-# pr_2021_simplified <- polygon_dissolve(from = "csd_2021_simplified", to = "pr_2021", field = "geosid", start = 1, end = 2)
+# save to an R object ----
 
-# write the results as geopackages for quick viewing in QGIS
+save(polygons_simplified, file = "polygons_simplified.RData")
+save(vertices, file = "polygons_vertices.RData")
+rio::export(vertex_summary, "vertex_summary.xlsx")
 
-# sf::st_write(csd_2021_simplified, dsn = "csd2021_simplified.gpkg", delete_dsn = TRUE)
-# sf::st_write(cd_2021_simplified, dsn = "cd2021_simplified.gpkg", delete_dsn = TRUE)
-# sf::st_write(pr_2021_simplified, dsn = "pr2021_simplified.gpkg", delete_dsn = TRUE)
-
-# do the same for 2001
-
-# csd_2001_simplified <- polygon_simplify(filename = "csd_2001", x = 0.6, y = 0.98)
-# cd_2001_simplified <- polygon_dissolve(from = "csd_2001_simplified", to = "cd_2001", field = "geosid", start = 1, end = 4)
-# pr_2001_simplified <- polygon_dissolve(from = "csd_2001_simplified", to = "pr_2001", field = "geosid", start = 1, end = 2)
-# 
-# sf::st_write(csd_2001_simplified, dsn = "csd2001_simplified.gpkg", delete_dsn = TRUE)
-# sf::st_write(cd_2001_simplified, dsn = "cd2001_simplified.gpkg", delete_dsn = TRUE)
-# sf::st_write(pr_2001_simplified, dsn = "pr2001_simplified.gpkg", delete_dsn = TRUE)
-
-# save to an R object
-
-# save("polygons_simplified.RData")
+# javascript ----
 
 # for reference, here is the javascript simp_length.js
 # Ideally we would find a way to pass it directly to the mapshaper command call in R 
