@@ -1,7 +1,7 @@
 
 function percentage(a, x, y, minA, maxA) {
 
-      console.log( a.perimeter, x, y, minA, maxA );
+    // console.log( a.perimeter, x, y, minA, maxA );
 
     // Ensure 'a' is positive to avoid NaN results
     
@@ -13,7 +13,7 @@ function percentage(a, x, y, minA, maxA) {
     
     return pct;
     
-    console.log( pct );
+    // console.log( pct );
       
 }
 
